@@ -4,6 +4,8 @@ SaaS multi-tenant de prospecção ativa. Minera leads em **Google Maps, LinkedIn
 
 Este repositório traz o código completo mais esta documentação de como tudo funciona. Nenhuma chave, senha ou dado pessoal está versionado: toda credencial entra por variável de ambiente (veja `.env.example`).
 
+> **Primeira vez aqui? Comece pelo [Manual de Instalação](INSTALACAO.md)**, com o passo a passo e onde pegar cada chave.
+
 ## Como funciona (o fluxo)
 
 ```
