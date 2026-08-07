@@ -129,6 +129,47 @@ Regra de ouro: comece só com **Anthropic + um canal** (WhatsApp OU email). Ligu
 
 ---
 
+## Parte 5B. Guia detalhado das três chaves que mais travam
+
+Estas três são as que costumam dar trabalho. Faça com calma.
+
+### 1. A IA que avalia os leads (Anthropic)
+
+Sem essa chave o sistema nem liga, é ela que qualifica os leads e responde as mensagens.
+
+1. Acesse `console.anthropic.com` e crie uma conta.
+2. Vá em **Billing** (ou Plans and Billing) e **adicione um cartão e compre créditos**. A API é pré-paga: sem crédito, ela recusa as chamadas. Comece com um valor pequeno para testar.
+3. Vá em **Settings** e depois **API Keys**, clique em **Create Key**, dê um nome e copie a chave (começa com `sk-ant-`). Ela só aparece uma vez, então guarde.
+4. Cole essa chave na variável `ANTHROPIC_API_KEY` do arquivo `.env` e também cadastre no painel, em Configurações, Credenciais, provider Anthropic.
+
+### 2. A conta de email (Brevo)
+
+Serve para enviar email frio em volume e para receber as respostas.
+
+1. Acesse `brevo.com` e crie uma conta (o plano grátis já dá para começar, com limite diário baixo).
+2. Vá em **Senders, Domains and IPs**. **Adicione o seu domínio e verifique-o**, seguindo os registros de DNS que o Brevo pedir (SPF e DKIM). Este passo é o que evita cair em spam; não pule.
+3. Crie um **remetente** (o email que vai aparecer no envio).
+4. Vá em **SMTP and API**, aba **API Keys**, e gere uma chave. Você usa ela para conectar o envio (cadastrada no painel do minerador, no canal de email).
+5. **Webhooks (opcional, mas recomendado):** para o sistema saber quem abriu, quem respondeu e quem deu erro, configure dois webhooks no Brevo apontando para o seu app, usando o mesmo valor do `BREVO_WEBHOOK_SECRET` como token na URL:
+   - Em **Transactional, Settings, Webhooks**: eventos de status (enviado, entregue, erro).
+   - Em **Inbound Parsing**: para as respostas dos leads chegarem de volta ao sistema.
+6. Conta nova tem limite diário e reputação baixa. **Aqueça**: comece com pouco volume por dia e aumente aos poucos.
+
+### 3. WhatsApp oficial (API da Meta) e a aprovação do template
+
+Este é o que mais confunde. A regra da Meta: para **iniciar** uma conversa com alguém que ainda não te respondeu (que é o caso da prospecção fria), você **só pode enviar uma mensagem de modelo (template) previamente aprovada pela Meta**. Não dá para mandar texto livre para um número frio.
+
+1. Acesse `developers.facebook.com`, crie uma conta de desenvolvedor e um **App** do tipo Business.
+2. Adicione o produto **WhatsApp** ao app.
+3. Tenha um **número de WhatsApp Business** e, para produção, uma **conta comercial verificada** (Business Manager). No começo dá para testar com o número de teste que a Meta fornece.
+4. Pegue o **Token de acesso** e o **Phone Number ID**, e cadastre no painel do minerador, no canal WhatsApp.
+5. **Crie o template e mande para aprovação:** em **Message Templates**, crie a sua mensagem de abordagem (com as variáveis, tipo o nome da pessoa) e **submeta para aprovação**. A Meta analisa e aprova (ou reprova, se parecer spam ou promoção agressiva). A aprovação leva de alguns minutos até cerca de 24 horas. **Só depois de aprovado** o disparo frio funciona.
+6. Configure o **webhook** do WhatsApp (usando o `WHATSAPP_VERIFY_TOKEN` que você gerou) para o sistema receber as respostas e o bot poder responder.
+
+Dica: se não quiser lidar com a burocracia da Meta e a aprovação de template logo de cara, existem provedores de WhatsApp hospedados (tipo UazAPI) que simplificam o começo. Cada um tem seu próprio jeito de pegar o token, que você cola no mesmo lugar do painel.
+
+---
+
 ## Parte 6. Primeira campanha (teste)
 
 1. No painel, vá em Campanhas e crie uma nova.
