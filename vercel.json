@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["gru1"],
+  "crons": [
+    { "path": "/api/cron/daily-plan", "schedule": "0 11 * * *" },
+    { "path": "/api/cron/daily-plan-reforco", "schedule": "0 17 * * *" }
+  ]
+}

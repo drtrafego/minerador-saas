@@ -1,0 +1,17 @@
+FROM node:20-alpine
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.32.1 --activate
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+COPY tsconfig.json ./
+COPY src ./src
+COPY scripts ./scripts
+COPY drizzle ./drizzle
+
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--require /app/scripts/_mock-server-only.cjs"
+
+CMD ["pnpm", "worker"]
